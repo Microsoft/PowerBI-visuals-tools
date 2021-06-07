@@ -16,9 +16,9 @@
       "url": "https://cran.r-project.org/web/packages/htmlwidgets/index.html"
     },
     {
-      "name": "XML",
-      "displayName": "XML",
-      "url": "https://cran.r-project.org/web/packages/XML/index.html"
+      "name": "xml2",
+      "displayName": "xml2",
+      "url": "https://cran.r-project.org/web/packages/xml2/index.html"
     }
   ]
 }

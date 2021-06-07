@@ -5,7 +5,7 @@ libraryRequireInstall = function(packageName, ...)
     warning(paste("*** The package: '", packageName, "' was not installed ***", sep=""))
 }
 
-libraryRequireInstall("XML")
+libraryRequireInstall("xml2")
 libraryRequireInstall("htmlwidgets")
 
 internalSaveWidget <- function(widget, fname)
@@ -24,47 +24,49 @@ FlattenHTML <- function(fnameIn, fnameOut)
     return(FALSE)
   
   dir = dirname(fnameIn)
-  html = htmlTreeParse(fnameIn, useInternal = TRUE)
-  top = xmlRoot(html)
+  html = read_html(fnameIn, useInternal = TRUE)
+  top = xml_root(html)
   
   # extract all <script> tags with src value
-  srcNode=getNodeSet(top, '//script[@src]')
+  srcNode=xml_find_all(top, '//script[@src]')
   for (node in srcNode)
   {
-    b = xmlAttrs(node)
+    b = xml_attrs(node)
     fname = file.path(dir, b['src'])
     alternateSrc = FindSrcReplacement(fname)
     if (!is.null(alternateSrc))
     {
       s = alternateSrc
       names(s) = 'src'
-      newNode = xmlNode("script",attrs = s)
-      replaceNodes(node, newNode)
+      newNode = xml_new_root("script")
+      xml_set_attrs(newNode, s)
+      xml_replace(node, newNode)
     }else{
       str=ReadFileForEmbedding(fname);
       if (!is.null(str))
       {      
-        newNode = xmlNode("script", str, attrs = c(type = "text/javascript"))
-        replaceNodes(node, newNode)
+        newNode = xml_new_root("script",str)
+        xml_set_attrs( newNode, c( type = "text/javascript") )
+        xml_replace(node, newNode)
       }
     }
   }
   
   # extract all <link> tags with src value
-  linkNode=getNodeSet(top, '//link[@href]')
+  linkNode=xml_find_all(top, '//link[@href]')
   for (node in linkNode)
   {
-    b = xmlAttrs(node)
+    b = xml_attrs(node)
     fname = file.path(dir, b['href'])
     str = ReadFileForEmbedding(fname, FALSE);
     if (!is.null(str))
     {
-      newNode = xmlNode("style", str)
-      replaceNodes(node, newNode)
+      newNode = xml_new_root("style", str)
+      xml_replace(node, newNode)
     }
   }
   
-  saveXML(html, file = fnameOut)
+  write_xml(html, file = fnameOut)
   return(TRUE)
 }
 
