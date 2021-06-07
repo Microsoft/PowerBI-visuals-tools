@@ -115,4 +115,14 @@ FindSrcReplacement <- function(str)
   str = paste('https://cdn.plot.ly/plotly-', verstr,'.min.js', sep='')
   return(str)
 }
+
+ReadFullFileReplaceString <- function(fnameIn, fnameOut, sourceString,targetString) {
+  # Replaces texts in file
+  # This makes it possible to replace e.g. paddings in the generated html widget code
+  if(!file.exists(fnameIn))
+    return(NULL)
+  tx  <- readLines(fnameIn,encoding = "UTF-8")
+  tx2  <- gsub(pattern = sourceString, replace = targetString, x = tx)
+  writeLines(tx2, con = fnameOut)
+}
 #################################################
