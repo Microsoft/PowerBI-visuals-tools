@@ -2,6 +2,8 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## 3.2.4
+* Fixed certificate issues
 
 ## 3.2.2
 * Removed npm-force-resolutions package
